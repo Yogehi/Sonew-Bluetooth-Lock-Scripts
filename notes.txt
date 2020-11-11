@@ -1,0 +1,78 @@
+Random notes I took while looking at the lock.
+
+char-write-cmd 0x004d 2900000001020328
+char-write-cmd 0x004d fe4f50454e000000f0fd
+char-write-cmd 0x004d 2800000001020300000009090929
+char-write-cmd 0x004d EF000000000000000000000000000000000000F1
+
+# encrypt
+char-write-cmd 0x004d CB1D3A4C43110E342D274C4929322D4059CA
+Notification handle = 0x0038 value: f9 34 9c 20 e7 20 af c9 5c 15 0a df 17 52 89 93 ba f8
+
+char-write-cmd 0x004d 25262728292A2B2C2D2E2F303132333435363738
+
+x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x29
+
+unknown service gatt attributes
+0000ffd0-0000-1000-8000-00805f9b34fb
+0000ffd5-0000-1000-8000-00805f9b34fb
+
+F9DB7B0DF940EA6DDC5EA45FEAAB121C97F8
+F99C6107BFAFAED3C91188EBA4E25F7074F8
+
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.updataSrc --dump-return
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.connectGatt --dump-return --dump-args
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.setMsg --dump-return --dump-args
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.setNotify --dump-return
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.writeCharacteristic --dump-return --dump-args
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.setAES --dump-return 
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.setPWD --dump-return
+android hooking watch class_method bsdq.bsdq.ble.MyBluetoothGatt.getPwd --dump-return 
+
+// if 'z' is set to true, then the lock unlocks
+    public void open(boolean z, boolean z2) {
+        byte[] bArr = {-2, 79, 80, 69, 78, 0, 0, 0, -16, -3};
+        // hex string: fe4f50454e000000f0fd
+        // string: þOPEN...ðý
+        byte[] bArr2 = {-2, 67, 76, 79, 83, 69, 0, 0, -16, -3};
+        // hex string: fe434c4f53450000f0fd
+        // string: þCLOSE..ðý
+        if (!z2) {
+            bArr[8] = 0;
+            bArr2[8] = 0;
+        }
+        if (z) {
+            writeCharacteristic(DeviceUUID.CONSMART_BLE_NOTIFICATION_SERVICE_WRGB_UUID, DeviceUUID.CONSMART_BLE_NOTIFICATION_CHARACTERISTICS_WRGB_UUID, bArr);
+        } else {
+            writeCharacteristic(DeviceUUID.CONSMART_BLE_NOTIFICATION_SERVICE_WRGB_UUID, DeviceUUID.CONSMART_BLE_NOTIFICATION_CHARACTERISTICS_WRGB_UUID, bArr2);
+        }
+    }
+
+Arguments bsdq.bsdq.ble.MyBluetoothGatt.writeCharacteristic(0000ffd5-0000-1000-8000-00805f9b34fb, 0000ffd9-0000-1000-8000-00805f9b34fb, [object Object])
+
+aes key
+private byte[] sendsrcAES = {-53, 2, 5, 5, 16, 8, 35, 1, 2, 0, 5, 85, 34, 1, 18, 19, 20, -54};
+hex string: cb02050510082301020005552201121314ca
+string: Ë.....#....U"....Ê
+
+public byte[] srcAES = {2, 5, 5, 16, 8, 35, 1, 2, 0, 5, 85, 34, 1, 18, 19, 20};
+hex string: 02050510082301020005552201121314
+string: .....#....U"....
+
+public void setPWD(String str) {
+        if (str == null || str.length() != 6) {
+            setMsg(this.mAddr, 401);
+            return;
+        }
+        this.cache = str; // str = password
+        byte[] bArr = {41, 0, 0, 0, 0, 0, 0, 40};
+        int i = 0;
+        while (i < str.length()) { // while i is less than 6
+            int i2 = i + 1; //i2 = value of i + 1
+            bArr[i2] = Byte.parseByte(str.substring(i, i2));
+            //replaces characters in byte array with hex value of password in position
+            //probobly resulting in {41, 54, 57, 54, 57, 54, 57, 40}
+            i = i2;
+        }
+        writeCharacteristic(DeviceUUID.CONSMART_BLE_NOTIFICATION_SERVICE_WRGB_UUID, DeviceUUID.CONSMART_BLE_NOTIFICATION_CHARACTERISTICS_WRGB_UUID, bArr);
+    }
