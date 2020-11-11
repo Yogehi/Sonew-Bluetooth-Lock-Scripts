@@ -8,6 +8,8 @@ Amazon page: https://www.amazon.co.uk/gp/product/B07KTSP2VX/ref=ox_sc_act_title_
 
 Repo contents:
 
+* `app_gstore.apk` - companion app found on the Google Play store at the time of testing
+* `app_qqstore.apk` - companion app found on the QQ App store at the time of testing
 * `brute-force-change-password.py` - attempt to change the passcode of the lock via brute force (takes like 8 hours)
 * `brute-force-change-physical-code.py` - attempt to change the physical code of the lock via brute force (takes like 2 minutes)
 * `brute-force-hidden-command-ef00000000f1.py` - does nothing really, trying to figure out what the hidden command does
