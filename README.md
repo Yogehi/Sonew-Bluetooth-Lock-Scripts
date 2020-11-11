@@ -2,7 +2,7 @@
 
 F-Secure had an internal competition in March 2020 to hack a bunch of devices. This is my dump of stuff I created to hack one of the targets: Sonew Sonew1fhrxp32ei Bluetooth Pad Lock
 
-![alt text](https://github.com/Yogehi/Sonew-Bluetooth-Lock-Scripts/blob/main/Capture.PNG)
+![alt text](https://github.com/Yogehi/Sonew-Bluetooth-Lock-Scripts/blob/main/image.PNG)
 
 Amazon page: https://www.amazon.co.uk/gp/product/B07KTSP2VX/ref=ox_sc_act_title_2?smid=A36CCHJKEXVYRD
 
